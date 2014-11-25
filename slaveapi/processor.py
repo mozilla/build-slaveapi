@@ -60,7 +60,7 @@ class Processor(object):
                 slave, action, args, kwargs, res = item
                 log_data.slave = slave
                 start_ts = time.time()
-                messages.put((RUNNING, item, start_ts))
+                messages.put((RUNNING, item, "In Progress", start_ts))
                 res, msg = action(slave, *args, **kwargs)
                 log.info("Finished Processing item: %s", item)
                 finish_ts = time.time()
@@ -71,7 +71,8 @@ class Processor(object):
                 if jobs >= self.max_jobs:
                     break
             except Exception, e:
+                finish_ts = time.time()
                 logException(log.error, "Something went wrong while processing!")
                 if item:
                     log.debug("Item was: %s", item)
-                messages.put((FAILURE, item, str(e)))
+                messages.put((FAILURE, item, str(e), start_ts, finish_ts))
