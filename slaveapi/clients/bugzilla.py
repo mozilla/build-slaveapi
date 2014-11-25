@@ -1,5 +1,8 @@
 from ..global_state import bugzilla_client
+import logging
+from requests import HTTPError
 
+log = logging.getLogger(__name__)
 
 class Bug(object):
     def __init__(self, id_, loadInfo=True):
@@ -9,8 +12,11 @@ class Bug(object):
             self.refresh()
 
     def refresh(self):
-        self.data = bugzilla_client.get_bug(self.id_)
-        self.id_ = self.data["id"]
+        try:
+            self.data = bugzilla_client.get_bug(self.id_)
+            self.id_ = self.data["id"]
+        except HTTPError, e:
+            log.debug('HTTPError - %s' % e)
 
     def add_comment(self, comment, data={}):
         return bugzilla_client.add_comment(self.id_, comment, data)
