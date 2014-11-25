@@ -1,5 +1,6 @@
 from ..global_state import bugzilla_client
 import logging
+import urllib
 from requests import HTTPError
 
 log = logging.getLogger(__name__)
@@ -49,11 +50,11 @@ class ProblemTrackingBug(Bug):
         self.id_ = resp["id"]
 
 
-reboot_product = "mozilla.org"
-reboot_component = "Server Operations: DCOps"
+reboot_product = "Infrastructure & Operations"
+reboot_component = "DCOps"
 reboot_summary = "%(slave)s is unreachable"
 def get_reboot_bug(slave):
-    qs = "?product=%s&component=%s" % (reboot_product, reboot_component)
+    qs = "?product=%s&component=%s" % (urllib.quote(reboot_product), urllib.quote(reboot_component))
     qs += "&blocks=%s&resolution=---" % slave.bug.id_
     summary = reboot_summary % {"slave": slave.name}
     for bug in bugzilla_client.request("GET", "bug" + qs)["bugs"]:
