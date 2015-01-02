@@ -31,5 +31,13 @@ setup(
         "pytz>=2013.7",
         "python-dateutil>=1.5",
         "mozpoolclient==0.1.5",
+        "Fabric==1.8.0",
+        "IPy==0.81",
+        "argparse==1.2.1",
+        "boto==2.27.0",
+        "iso8601==0.1.10",
+        "repoze.lru==0.6",
+        "ssh==1.8.0",
+        "wsgiref==0.1.2",
     ],
 )

@@ -8,6 +8,17 @@ from ..global_state import processor, results
 log = logging.getLogger(__name__)
 
 
+def missing_fields_response(fields_received):
+    unmet_fields_msg = 'Fields received: '
+    for key, val in fields_received.iteritems():
+        unmet_fields_msg += '`%s`: %s, ' % (key, val or 'None')
+    return make_response(
+        jsonify({'error': 'Missing required fields for this action',
+                 'msg': unmet_fields_msg
+        }), 400
+    )
+
+
 class ActionView(MethodView):
     """Abstract base class for views that expose actions. Subclasses must
     set "action", which should be a callable that accepts a slave name as
