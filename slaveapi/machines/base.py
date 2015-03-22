@@ -40,10 +40,7 @@ class Machine(object):
         Uses self.fqdn"""
 
         log.info("Getting inventory info")
-        info = inventory.get_system(
-            self.fqdn, config["inventory_api_url"], config["inventory_username"],
-            config["inventory_password"],
-        )
+        info = inventory.get_system(self.fqdn)
         if info["pdu_fqdn"]:
             self.pdu = PDU(info["pdu_fqdn"], info["pdu_port"])
         # Return info to allow subclasses to do stuff with data, without refetching
