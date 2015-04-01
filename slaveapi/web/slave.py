@@ -10,11 +10,10 @@ from ..actions.buildslave_uptime import buildslave_uptime
 from ..actions.buildslave_last_activity import buildslave_last_activity
 from ..actions.disable import disable
 from ..slave import Slave as SlaveClass
-from ..actions.aws_create_instance import aws_create_instance
 from ..actions.aws_terminate_instance import aws_terminate_instance
 from ..actions.aws_start_instance import aws_start_instance
 from ..actions.aws_stop_instance import aws_stop_instance
-from ..util import normalize_truthiness, value_in_values
+from ..util import normalize_truthiness
 
 log = logging.getLogger(__name__)
 
@@ -87,55 +86,6 @@ class Disable(ActionView):
         return super(Disable, self).post(slave, *args, force=force,
                                          reason=reason, **kwargs)
 
-
-class AWSCreateInstance(ActionView):
-    """Request an AWS slave to be instantiated. See
-    :py:class:`slaveapi.web.action_base.ActionView` for details on GET and POST
-    methods. See
-    :py:func:`slaveapi.actions.aws_create_instance.aws_create_instance
-    for details on what options are supported"""
-    def __init__(self, *args, **kwargs):
-        self.action = aws_create_instance
-        ActionView.__init__(self, *args, **kwargs)
-
-    def post(self, slave, *args, **kwargs):
-        required_fields = {
-            'email': request.form.get('email'),
-            'bug': request.form.get('bug'),
-            'instance_type': request.form.get('instance_type'),
-        }
-        optional_fields = {
-            'arch': request.form.get('arch')
-        }
-
-        if not all(required_fields.values()):
-            return missing_fields_response(required_fields)
-
-        if not value_in_values(required_fields['instance_type'],
-                               ['build', 'test']):
-            return make_response(
-                jsonify(
-                    {'error': 'incorrect arg for instance_type in post',
-                     'msg': 'Got: %s, expected: %s' % (
-                         required_fields['instance_type'], ['build', 'test'])}
-                ), 400
-            )
-
-        if (required_fields['instance_type'] == 'build' and
-                optional_fields == '32'):
-            return make_response(
-                jsonify(
-                    {'error': 'mismatching instance_type and arch',
-                     'msg': '32bit instances are not used for building'}
-                ), 400
-            )
-
-        return super(AWSCreateInstance, self).post(
-            slave, *args, email=required_fields['email'],
-            bug=required_fields['bug'],
-            instance_type=required_fields['instance_type'],
-            arch=optional_fields['arch'], **kwargs
-        )
 
 class AWSTerminateInstance(ActionView):
     """Terminate aws instance if it exists.

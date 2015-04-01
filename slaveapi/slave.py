@@ -45,15 +45,14 @@ class Slave(Machine):
     def load_slavealloc_info(self):
         log.info("Getting slavealloc info")
         info = slavealloc.get_slave(config["slavealloc_api_url"], name=self.name)
-        if info:  # some slaves might not be in slavealloc. e.g., loans
-            self.enabled = info["enabled"]
-            self.basedir = info["basedir"].rstrip("/")
-            # Because we always work with UNIX style paths in SlaveAPI we need
-            # to massage basedir when a Windows style one is detected.
-            if self.basedir[1] == ":":
-                self.basedir = windows2msys(self.basedir)
-            self.notes = info["notes"]
         master_info = slavealloc.get_master(config["slavealloc_api_url"], info["current_masterid"])
+        self.enabled = info["enabled"]
+        self.basedir = info["basedir"].rstrip("/")
+        # Because we always work with UNIX style paths in SlaveAPI we need
+        # to massage basedir when a Windows style one is detected.
+        if self.basedir[1] == ":":
+            self.basedir = windows2msys(self.basedir)
+        self.notes = info["notes"]
         self.master = master_info.get("fqdn", None)
         if self.master:
             self.master_url = furl().set(scheme="http", host=self.master, port=master_info["http_port"])
