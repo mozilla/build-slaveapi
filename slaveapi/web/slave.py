@@ -105,7 +105,8 @@ class AWSCreateInstance(ActionView):
             'instance_type': request.form.get('instance_type'),
         }
         optional_fields = {
-            'arch': request.form.get('arch')
+            'arch': request.form.get('arch'),
+            'disambig': request.form.get('disambig'),
         }
 
         if not all(required_fields.values()):
@@ -134,7 +135,8 @@ class AWSCreateInstance(ActionView):
             slave, *args, email=required_fields['email'],
             bug=required_fields['bug'],
             instance_type=required_fields['instance_type'],
-            arch=optional_fields['arch'], **kwargs
+            arch=optional_fields['arch'], disambig=optional_fields['disambig'],
+            **kwargs
         )
 
 class AWSTerminateInstance(ActionView):

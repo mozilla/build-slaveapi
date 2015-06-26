@@ -9,7 +9,7 @@ from ..util import value_in_values
 log = logging.getLogger(__name__)
 
 
-def aws_create_instance(name, email, bug, instance_type, arch=None):
+def aws_create_instance(name, email, bug, instance_type, arch=None, disambig=None):
     """Attempts to create an aws instance for a given owner
 
 
@@ -19,6 +19,8 @@ def aws_create_instance(name, email, bug, instance_type, arch=None):
     :type bug: str
     :param instance_type: accepted values are 'build' and 'test'
     :type instance_type: str
+    :param disambig: A numerical value to help uniquely identify this machine (useful when a user already has an instance but needs a new one of the same type)
+    :type disambig: int
 
     :rtype: tuple
     """
@@ -40,6 +42,8 @@ def aws_create_instance(name, email, bug, instance_type, arch=None):
         if name == 'default':
             # since this slave does not exist yet, this allows for a default to be created
             name = 'dev-linux64-ec2-%s' % nick
+        if disambig:
+            name += str(disambig)
         fqdn = '%s.dev.releng.use1.mozilla.com' % name
         aws_config = 'dev-linux%s' % arch
         data = 'us-east-1.instance_data_dev.json'
@@ -47,6 +51,8 @@ def aws_create_instance(name, email, bug, instance_type, arch=None):
         if name == 'default':
             # since this slave does not exist yet, this allows for a default to be created
             name = 'tst-linux%s-ec2-%s' % (arch, nick)
+        if disambig:
+            name += str(disambig)
         fqdn = '%s.test.releng.use1.mozilla.com' % name
         aws_config = 'tst-linux%s' % arch
         data = 'us-east-1.instance_data_tests.json'
