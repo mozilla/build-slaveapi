@@ -23,9 +23,6 @@ username = bhearsum@mozilla.com
 api_url = https://buildapi.pvt.build.mozilla.org/buildapi/
 max_concurrent = 4
 
-[devices]
-devices_json_url = http://hg.mozilla.org/build/tools/raw-file/default/buildfarm/mobile/devices.json
-
 [slaves]
 default_domain = build.mozilla.org
 ipmi_username = releng

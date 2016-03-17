@@ -1,5 +1,3 @@
-from mozpoolclient import MozpoolHandler
-
 from .results import SUCCESS, FAILURE
 from ..clients.bugzilla import file_reboot_bug
 from ..clients.ping import ping
@@ -20,9 +18,6 @@ def reboot(name, update_bug=True):
     * SSH: Logs into the machine via SSH and reboots it with an \
         appropriate command.
 
-    * Mozpool: Connects to Mozpool and issues a reboot command. \
-        If the slave has no mozpool interface, this is skipped.
-
     * IPMI: Uses the slave's IPMI interface to initiate a hard \
         reboot. If the slave has no IPMI interface, this is skipped.
 
@@ -35,7 +30,6 @@ def reboot(name, update_bug=True):
     status_text = ""
     slave = Slave(name)
     slave.load_inventory_info()
-    slave.load_devices_info()
     slave.load_ipmi_info()
     slave.load_bug_info(createIfMissing=False)
     status_text += "Attempting SSH reboot..."
@@ -59,17 +53,6 @@ def reboot(name, update_bug=True):
                 alive = wait_for_reboot(slave)
     except:
         logException(log.error, "Caught exception during SSH reboot.")
-
-    # If there is a mozpool server associated
-    if not alive and slave.mozpool_server:
-        status_text += "Failed.\n"
-        status_text += "Attempting reboot via Mozpool..."
-        try:
-            mozpoolhandler = MozpoolHandler(slave.mozpool_server)
-            mozpoolhandler.device_power_cycle(slave.name, None)
-            alive = wait_for_reboot(slave)
-        except:
-            logException(log.error, "Caught exception during mozpool reboot.")
 
     # If that doesn't work, maybe an IPMI reboot will...
     if not alive and slave.ipmi:

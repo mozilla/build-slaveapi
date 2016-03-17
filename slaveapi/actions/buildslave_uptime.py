@@ -75,7 +75,6 @@ def buildslave_uptime(name):
     """
     slave = Slave(name)
     slave.load_slavealloc_info()
-    slave.load_devices_info()
 
     if not ping(slave.fqdn):
         return FAILURE, "%s - Slave is offline, cannot get uptime!" % name

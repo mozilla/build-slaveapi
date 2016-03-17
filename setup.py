@@ -30,7 +30,6 @@ setup(
         "orderedmultidict>=0.7.1",
         "pytz>=2013.7",
         "python-dateutil>=1.5",
-        "mozpoolclient==0.1.5",
         "Fabric==1.8.0",
         "IPy==0.81",
         "argparse==1.2.1",

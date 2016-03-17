@@ -8,8 +8,6 @@ Clients needed:
 - more slavealloc stuff
 
 Other:
-- Panda/Tegra reboots.
--- Use mozpool?
 - Figure where and how to log events; retrieve them.
 -- Maybe slavealloc db? A different db?
 - Query API for status of command

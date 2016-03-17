@@ -110,9 +110,3 @@ def get_system(fqdn):
             pdu += ".mozilla.com"
         info["pdu_fqdn"] = pdu
         info["pdu_port"] = pdu_port
-
-    # If the system has a mozpool server managing it, it's expressed as this key
-    imaging_server = find_key_value(info, "system.imaging_server.0")
-    if imaging_server:
-        info["imaging_server"] = imaging_server
-    return info

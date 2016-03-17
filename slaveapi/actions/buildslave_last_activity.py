@@ -26,7 +26,6 @@ def buildslave_last_activity(name):
     """
     slave = Slave(name)
     slave.load_slavealloc_info()
-    slave.load_devices_info()
 
     rc, uptime = buildslave_uptime(name)
     if rc != SUCCESS:

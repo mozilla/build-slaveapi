@@ -30,7 +30,6 @@ class Slave(Machine):
         self.recent_jobs = None
         self.master = None
         self.master_url = None
-        self.mozpool_server = None
         # used for hosts that have a different machine running buildbot than themselves
         # Valid buildbotslave value is an instance of (or subclass thereof) the Slave class
         self.buildbotslave = None
@@ -38,7 +37,6 @@ class Slave(Machine):
     def load_all_info(self):
         Machine.load_all_info(self)
         self.load_slavealloc_info()
-        self.load_devices_info()
         self.load_bug_info()
         self.load_recent_job_info()
 
@@ -60,21 +58,8 @@ class Slave(Machine):
 
     def load_inventory_info(self):
         info = Machine.load_inventory_info(self)
-        if info["imaging_server"]:
-            self.mozpool_server = "http://%s" % info["imaging_server"]
         # Return info to allow subclasses to do stuff with data, without refetching
         return info
-
-    def load_devices_info(self):
-        log.info("Getting devices.json info")
-        device_info = devices.get_device(
-            self.name, config["devices_json_url"]
-        )
-        if not device_info or "foopy" not in device_info or device_info["foopy"] == "None":
-            return
-        # Now set the buildbotslave since we have a foopy!
-        self.buildbotslave = BuildbotSlave(device_info["foopy"])
-        self.buildbotslave.load_all_info()
 
     def load_bug_info(self, createIfMissing=False):
         log.info("Getting bug info")
@@ -109,7 +94,6 @@ class Slave(Machine):
             "bug": None,
             "recent_jobs": None,
             "buildbotslave": None,
-            "mozpool_server": None,
         })
         if self.recent_jobs:
             data["recent_jobs"] = self.recent_jobs
@@ -120,8 +104,6 @@ class Slave(Machine):
             }
         if self.buildbotslave:
             data["buildbotslave"] = self.buildbotslave.to_dict()
-        if self.mozpool_server:
-            data["mozpool_server"] = self.mozpool_server
         return data
 
 class BuildbotSlave(Machine):

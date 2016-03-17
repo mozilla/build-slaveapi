@@ -23,7 +23,6 @@ def shutdown_buildslave(name):
     status_text = "Gracefully shutting down slave..."
     slave = Slave(name)
     slave.load_slavealloc_info()
-    slave.load_devices_info()
 
     if not slave.master_url:
         status_text += "Success\nNo master set, nothing to do!"
