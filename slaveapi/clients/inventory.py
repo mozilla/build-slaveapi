@@ -110,3 +110,4 @@ def get_system(fqdn):
             pdu += ".mozilla.com"
         info["pdu_fqdn"] = pdu
         info["pdu_port"] = pdu_port
+    return info
