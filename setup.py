@@ -17,7 +17,7 @@ setup(
         "MarkupSafe>=0.18",
         "WebOb>=1.2.3",
         "requests>=1.2.3",
-        "bzrest==0.7",
+        "bzrest==0.9",
         "dnspython>=1.11.0",
         "paramiko>=1.11.0",
         "flask==0.10.1",
