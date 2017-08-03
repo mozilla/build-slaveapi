@@ -17,6 +17,7 @@ The credentials file should be a JSON file with the following keys:
  * `ipmi` -- the IPMI password
  * `bugzilla` -- the Bugzilla API password
  * `ssh` -- a mapping of usernames to lists of passwords for those usernames; the passwords will be tried sequentially.
+ * `snmp_community_password` -- snmp_community string used for PDU reboots
 
 Example:
   

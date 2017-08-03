@@ -2,12 +2,14 @@ from subprocess import check_output, STDOUT
 import time
 
 import logging
+from ..global_state import config
+
 log = logging.getLogger(__name__)
 
 class PDU(object):
     # These are just magic numbers/words that are factored out to here.
     snmp_protocol_version = "1"
-    snmp_community = "private"
+    snmp_community = config["snmp_community_password"]
     on_cmd = ["i", "1"]
     off_cmd = ["i", "2"]
     reboot_cmd = ["i", "3"]
