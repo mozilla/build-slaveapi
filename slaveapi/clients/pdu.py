@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 class PDU(object):
     # These are just magic numbers/words that are factored out to here.
-    snmp_protocol_version = "1"
+    snmp_protocol_version = "2c"
     snmp_community = config["snmp_community_password"]
     on_cmd = ["i", "1"]
     off_cmd = ["i", "2"]
