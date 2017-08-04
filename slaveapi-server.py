@@ -76,6 +76,7 @@ def load_credentials(credentials):
     config["inventory_password"] = credentials["inventory"]
     config["bugzilla_password"] = credentials["bugzilla"]
     config["ipmi_password"] = credentials["ipmi"]
+    config["snmp_community_password"] = credentials["snmp_community"]
 
 def setup_logging(level, logfile=None, maxsize=None, maxfiles=None):
     # Quiet down some of the libraries that we use.
