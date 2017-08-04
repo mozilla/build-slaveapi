@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 class PDU(object):
     # These are just magic numbers/words that are factored out to here.
     snmp_protocol_version = "2c"
-    snmp_community = config["snmp_community_password"]
+    snmp_community = None
     on_cmd = ["i", "1"]
     off_cmd = ["i", "2"]
     reboot_cmd = ["i", "3"]
@@ -25,6 +25,7 @@ class PDU(object):
         self.fqdn = fqdn
         self.port = port
         self.tower, self.infeed, self.outlet = self._parse_port(port)
+        self.snmp_community = config["snmp_community_password"]
 
     def poweroff(self):
         self._run_cmd(self.off_cmd)
@@ -41,6 +42,8 @@ class PDU(object):
         log.info("Powercycle completed.")
 
     def _run_cmd(self, cmd):
+        if not self.snmp_community:
+            raise Exception("SNMP Community string unset, unable to action via snmp")
         oid = "%s.%s.%s.%s" % (self.base_oid, self.tower, self.infeed, self.outlet)
         full_cmd = ["snmpset", "-v", self.snmp_protocol_version,
                     "-c", self.snmp_community, self.fqdn, oid]
