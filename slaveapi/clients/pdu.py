@@ -33,6 +33,9 @@ class PDU(object):
     def poweron(self):
         self._run_cmd(self.on_cmd)
 
+    def reboot(self):
+        self._run_cmd(self.reboot_cmd)
+
     def powercycle(self, delay=5):
         log.info("Powercycling via PDU.")
         self.poweroff()
