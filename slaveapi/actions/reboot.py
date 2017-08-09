@@ -74,7 +74,7 @@ def reboot(name, update_bug=True):
         status_text += "Attempting PDU reboot..."
         try:
             try:
-                slave.pdu.powercycle()
+                slave.pdu.reboot()
             except:
                 logException(log.warning, "Eating exception during PDU reboot.")
                 pass
