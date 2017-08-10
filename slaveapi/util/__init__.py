@@ -1,5 +1,6 @@
 # general util helper methods
 
+import re
 import sys
 import traceback
 
@@ -47,4 +48,20 @@ def logException(log_fn, message=None):
     for s in traceback.format_exception(tb_type, tb_value, tb_traceback):
         message += "%s\n" % s
     for line in message.split("\n"):
+        # avoid logging secrets when hitting exceptions
+        if "CalledProcessError: Command" in line:
+            cmd = []
+            p = re.findall(r'(?<=\[)(.*?)(?=\])', line)
+            p = p[0].split(", ")
+            for i in range(0, len(p)):
+                cmd.append(str(p[i]))
+
+            if cmd[0] == "'ipmitool'":
+                for i in range(1, len(cmd)):
+                    if cmd[i] == "'-P'":
+                        line = line.replace(cmd[i+1], "***")
+            if cmd[0] == "'snmpset'":
+                for i in range(1, len(cmd)):
+                    if cmd[i] == "'-c'":
+                        line = line.replace(cmd[i+1], "***")
         log_fn(line)
