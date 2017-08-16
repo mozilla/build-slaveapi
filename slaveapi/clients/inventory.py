@@ -106,7 +106,7 @@ def get_system(fqdn):
     pdu = find_key_value(info, "system.pdu.0")
     if pdu:
         pdu, pdu_port = pdu.split(":")
-        if not pdu.endswith(".mozilla.com"):
+        if not pdu.endswith((".mozilla.com", ".mozilla.net")):
             pdu += ".mozilla.com"
         info["pdu_fqdn"] = pdu
         info["pdu_port"] = pdu_port
