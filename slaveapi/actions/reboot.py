@@ -89,17 +89,12 @@ def reboot(name, update_bug=True):
         return SUCCESS, status_text
     else:
         status_text += "Failed.\n"
-        if slave.reboot_bug:
-            status_text += "Slave already has reboot bug (%s), nothing to do." % slave.reboot_bug.id_
-            return FAILURE, status_text
-        else:
-            if not slave.bug:
-                slave.load_bug_info(createIfMissing=True)
-            if update_bug:
-                slave.reboot_bug = file_reboot_bug(slave)
-                status_text += "Filed IT bug for reboot (bug %s)" % slave.reboot_bug.id_
-                data = {}
-                if not slave.bug.data["is_open"]:
-                    data["status"] = "REOPENED"
-                slave.bug.add_comment(status_text, data=data)
-            return FAILURE, status_text
+        if not slave.bug:
+            slave.load_bug_info(createIfMissing=True)
+        if update_bug:
+            status_text += "Machine is unreachable, manual intervention required"
+            data = {}
+            if not slave.bug.data["is_open"]:
+                data["status"] = "REOPENED"
+            slave.bug.add_comment(status_text, data=data)
+        return FAILURE, status_text
